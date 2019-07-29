@@ -302,11 +302,16 @@ function sdc-cs-init {
     echo "docker run sdc-cassandra-init..."
     if [ ${LOCAL} = false ]; then
         docker pull ${PREFIX}/sdc-cassandra-init:${RELEASE}
+	echo "1"
     fi
+    echo "2"
     docker run --name ${DOCKER_NAME} --env RELEASE="${RELEASE}" --env SDC_USER="${SDC_USER}" --env SDC_PASSWORD="${SDC_PASSWORD}" --env CS_PASSWORD="${CS_PASSWORD}" --env ENVNAME="${DEP_ENV}" --env HOST_IP=${IP} --log-driver=json-file --log-opt max-size=100m --log-opt max-file=10 --ulimit memlock=-1:-1 --ulimit nofile=4096:100000 ${LOCAL_TIME_MOUNT_CMD} --volume ${WORKSPACE}/data/CS:/var/lib/cassandra --volume ${WORKSPACE}/data/environments:/root/chef-solo/environments --volume ${WORKSPACE}/data/CS-Init:/root/chef-solo/cache ${PREFIX}/sdc-cassandra-init:${RELEASE} > /dev/null 2>&1
     rc=$?
+    echo "3"
     docker_logs ${DOCKER_NAME}
+    echo ${rc}
     if [[ ${rc} != 0 ]]; then exit ${rc}; fi
+    echo "4"
 }
 #
 
